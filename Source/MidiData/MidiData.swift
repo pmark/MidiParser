@@ -55,9 +55,9 @@ public final class MidiData {
     
     public lazy var ticksPerBeat: TicksPerBeat = TicksPerBeat(UInt(tempoTrack.timeResolution))
     
-    public init() {
-        sequence = MidiSequence()
-        tempoTrack = MidiTempoTrack(musicTrack: sequence.tempoTrack)
+    public init() throws {
+        sequence = try MidiSequence()
+        tempoTrack = try MidiTempoTrack(musicTrack: sequence.tempoTrack)
         noteTracks = []
     }
     
@@ -87,15 +87,19 @@ public extension MidiData {
 private extension MidiData {
     
     func retainTracks() {
-        tempoTrack = MidiTempoTrack(musicTrack: sequence.tempoTrack)
-        var tracks: [MidiNoteTrack] = []
-        for i in 0 ..< sequence.trackCount {
-            if let musicTrack = sequence.track(at: i) {
-                let track = MidiNoteTrack(musicTrack: musicTrack, beatsPerMinute: beatsPerMinute, ticksPerBeat: ticksPerBeat)
-                tracks.append(track)
+        do {
+            tempoTrack = try MidiTempoTrack(musicTrack: sequence.tempoTrack)
+            var tracks: [MidiNoteTrack] = []
+            for i in 0 ..< sequence.trackCount {
+                if let musicTrack = sequence.track(at: i) {
+                    let track = try MidiNoteTrack(musicTrack: musicTrack, beatsPerMinute: beatsPerMinute, ticksPerBeat: ticksPerBeat)
+                    tracks.append(track)
+                }
             }
+            noteTracks = tracks
+        } catch {
+            noteTracks = []
         }
-        noteTracks = tracks
     }
     
 }
@@ -116,8 +120,8 @@ public extension MidiData {
 public extension MidiData {
 
     @discardableResult
-    func addTrack() -> MidiNoteTrack {
-        let track = sequence.newTrack()
+    func addTrack() throws -> MidiNoteTrack {
+        let track = try sequence.newTrack()
         noteTracks.append(track)
         return track
     }

@@ -182,11 +182,11 @@ public final class MidiNoteTrack: MidiTrack {
         }
     }
     
-    init(musicTrack: MusicTrack, beatsPerMinute: BeatsPerMinute = BeatsPerMinute.regular, ticksPerBeat: TicksPerBeat = TicksPerBeat.regular) {
+    init(musicTrack: MusicTrack, beatsPerMinute: BeatsPerMinute = BeatsPerMinute.regular, ticksPerBeat: TicksPerBeat = TicksPerBeat.regular) throws {
         self.beatsPerMinute = beatsPerMinute
         self.ticksPerBeat = ticksPerBeat
         self.musicTrack = musicTrack
-        iterator = EventIterator(track: musicTrack)
+        iterator = try EventIterator(track: musicTrack)
         reload()
     }
 }

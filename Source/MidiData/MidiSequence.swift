@@ -44,11 +44,15 @@ final class MidiSequence {
         }
     }
     
-    init() {
+    init() throws {
         var sequencePtr: MusicSequence?
         check(NewMusicSequence(&sequencePtr), label: "NewMusicSequence")
         guard let sequence = sequencePtr else {
-            fatalError("Could not initialize MidiSequence")
+            throw NSError(domain: "MidiParser (fatal): Could not initialize MidiSequence", code: 1, userInfo: nil)
+//            fatalError("Could not initialize MidiSequence")
+//            print("MidiParser (fatal): Could not initialize MidiSequence")
+//            musicSequence = MusicSequence(&sequencePtr)
+//            return
         }
         musicSequence = sequence
     }
@@ -140,10 +144,15 @@ extension MidiSequence {
 //MARK: - Generate Data
 extension MidiSequence {
     
-    func newTrack() -> MidiNoteTrack {
+    func newTrack() throws -> MidiNoteTrack {
         var musicTrack: MusicTrack?
         check(MusicSequenceNewTrack(musicSequence, &musicTrack), label: "MusicSequenceNewTrack")
-        return MidiNoteTrack(musicTrack: musicTrack!)
+        
+        if let track = musicTrack {
+            return try MidiNoteTrack(musicTrack: track)
+        }
+        
+        throw NSError(domain: "MidiParser (fatal): MidiSequence could not create new music track", code: 1, userInfo: nil)
     }
     
     func createData(inFileType: MusicSequenceFileTypeID = .midiType,

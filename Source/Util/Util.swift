@@ -20,7 +20,8 @@ func check(_ status: OSStatus, label: String, level: ErrorLevel = .fatal) -> OSS
         let str = "\(label) error: \(status)"
         switch level {
         case .fatal:
-            fatalError(str)
+//            fatalError(str)
+            print("MidiParser (fatal): \(str)")
         case .log:
             print(str)
         case .ignore:

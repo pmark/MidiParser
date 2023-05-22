@@ -12,12 +12,21 @@ import Foundation
 final class EventIterator {
     private let _iterator: MusicEventIterator
     
-    init(track: MusicTrack) {
+    init(track: MusicTrack) throws {
         var iterator: MusicEventIterator?
         check(NewMusicEventIterator(track, &iterator), label: "NewMusicEventIterator")
         
         guard let eventIterator = iterator else {
-            fatalError("Could not initialize MusicEventIterator")
+//            fatalError("Could not initialize MusicEventIterator")
+            
+
+//            print("MidiParser (fatal): Could not initialize MusicEventIterator")
+            throw NSError(domain: "MidiParser (fatal): Could not initialize MusicEventIterator", code: 1, userInfo: nil)
+//            let ptr: UnsafeMutablePointer<MusicEventIterator?>
+//NewMusicEventIterator(_ inTrack: MusicTrack, _ outIterator: UnsafeMutablePointer<MusicEventIterator?>) -> OSStatus
+            
+//            _iterator = iterator
+//            return
         }
         _iterator = eventIterator
     }

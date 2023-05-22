@@ -67,9 +67,9 @@ public final class MidiTempoTrack: MidiTrack {
         return data
     }
     
-    init(musicTrack: MusicTrack) {
+    init(musicTrack: MusicTrack) throws {
         self.musicTrack = musicTrack
-        iterator = EventIterator(track: musicTrack)
+        try iterator = EventIterator(track: musicTrack)
         reload()
     }
 
